@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
           script: |
             cd /srv/appHome/phpapps/onebooks/
-            git pull origin main
+            git pull origin master
             rm -f .env
             echo "PORT=${{ secrets.PORT }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
