@@ -17,6 +17,7 @@ services:
       - akaunting_data:/var/www/html/storage
     ports:
       - "8080:80"
+      - "443:443"
     restart: unless-stopped
 
   db:
