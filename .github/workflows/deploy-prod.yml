@@ -3,7 +3,7 @@ name: Deploy to PROD on PR Merge
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
