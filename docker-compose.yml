@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  akaunting:
+    build: .
+    container_name: akaunting
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=akaunting
+      - DB_USERNAME=akaunting
+      - DB_PASSWORD=akaunting_password
+      - APP_URL=http://localhost:8080
+    volumes:
+      - ./storage:/var/www/html/storage
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  db:
+    image: mysql:5.7
+    container_name: akaunting_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=akaunting
+      - MYSQL_USER=akaunting
+      - MYSQL_PASSWORD=akaunting_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
