@@ -1,0 +1,30 @@
+name: Deploy to DEV on PR Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Execute script on remote server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.REMOTE_DEV_HOST }}
+          username: ${{ secrets.REMOTE_DEV_USER }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          script: |
+            cd /srv/appHome/phpapps/onebooks/
+            git pull origin main
+            rm -f .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "EMAIL=${{ secrets.EMAIL }}" >> .env
+            echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
+            docker compose up -d --build
