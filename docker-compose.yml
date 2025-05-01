@@ -2,7 +2,8 @@ version: '3'
 
 services:
   akaunting:
-    build: .
+    image: akaunting/akaunting:latest
+    platform: linux/amd64  # Force AMD64 architecture
     container_name: akaunting
     depends_on:
       - db
@@ -12,15 +13,14 @@ services:
       - DB_DATABASE=akaunting
       - DB_USERNAME=akaunting
       - DB_PASSWORD=akaunting_password
-      - APP_URL=http://localhost:8080
     volumes:
-      - ./storage:/var/www/html/storage
+      - akaunting_data:/var/www/html/storage
     ports:
       - "8080:80"
     restart: unless-stopped
 
   db:
-    image: mysql:5.7
+    image: mariadb:10.6  # Better ARM support than MySQL
     container_name: akaunting_db
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
@@ -32,4 +32,5 @@ services:
     restart: unless-stopped
 
 volumes:
+  akaunting_data:
   mysql_data:
