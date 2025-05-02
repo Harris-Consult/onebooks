@@ -22,9 +22,9 @@ jobs:
           script: |
             cd /srv/appHome/phpapps/onebooks/
             git pull origin master
-            rm -f .env
+            docker compose up -d --build
             echo "PORT=${{ secrets.PORT }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "EMAIL=${{ secrets.EMAIL }}" >> .env
             echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
-            docker compose up -d --build
+            echo "APP_URL=${{ secrets.APP_URL }}" >> .env
