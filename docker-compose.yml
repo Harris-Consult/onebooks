@@ -3,8 +3,8 @@ version: '3'
 services:
   akaunting:
     image: akaunting/akaunting:latest
-    platform: linux/amd64  # Force AMD64 architecture
-    container_name: akaunting
+    platform: linux/amd64
+    container_name: akaunting_app
     depends_on:
       - db
     environment:
@@ -12,21 +12,22 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=akaunting
       - DB_USERNAME=akaunting
-      - DB_PASSWORD=H@rr!s@20!4
+      - DB_PASSWORD=H@rr!s20!4
+      - APP_URL=https://onebook.harrisconsult.tech
     volumes:
       - akaunting_data:/var/www/html/storage
     ports:
-      - "8080:80"
+      - "8080:80"  # Expose to host
     restart: unless-stopped
 
   db:
-    image: mariadb:10.6  # Better ARM support than MySQL
+    image: mariadb:10.6
     container_name: akaunting_db
     environment:
-      - MYSQL_ROOT_PASSWORD=H@rr!s@20!4
+      - MYSQL_ROOT_PASSWORD=H@rr!s20!4
       - MYSQL_DATABASE=akaunting
       - MYSQL_USER=akaunting
-      - MYSQL_PASSWORD=H@rr!s@20!4
+      - MYSQL_PASSWORD=H@rr!s20!4
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
