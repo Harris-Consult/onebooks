@@ -2,36 +2,49 @@ version: '3'
 
 services:
   akaunting:
-    image: akaunting/akaunting:latest
-    platform: linux/amd64
-    container_name: akaunting_app
+    build: .
+    container_name: akaunting
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
+      - APP_ENV=production
+      - APP_URL=https://onebook.harrisconsult.tech
+      - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=akaunting
       - DB_USERNAME=akaunting
-      - DB_PASSWORD=H@rr!s@20!4
-      - APP_URL=https://onebook.harrisconsult.tech
+      - DB_PASSWORD=Harr!s20!4
     volumes:
       - akaunting_data:/var/www/html/storage
     ports:
       - "8080:80"  # Expose to host
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: mariadb:10.6
     container_name: akaunting_db
     environment:
-      - MYSQL_ROOT_PASSWORD=H@rr!sroot@20!4
-      - MYSQL_DATABASE=akaunting
-      - MYSQL_USER=akaunting
-      - MYSQL_PASSWORD=H@rr!s@20!4
+      - MARIADB_ROOT_PASSWORD=Harr!sroot20!4
+      - MARIADB_DATABASE=akaunting
+      - MARIADB_USER=akaunting
+      - MARIADB_PASSWORD=Harr!s20!4
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uakaunting", "-pHarr!s20!4"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
 
 volumes:
   akaunting_data:
   mysql_data:
+    driver: local
